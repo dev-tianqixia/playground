@@ -16,7 +16,7 @@ type Pos struct {
 	x, y int
 }
 
-var InvalidPosition = Pos{x: -1, y: -1}
+var positionHolder = Pos{x: -1, y: -1}
 
 type Board struct {
 	b [][]player
@@ -54,6 +54,28 @@ func (b *Board) IsTerminated(factor int) (player, bool) {
 		}
 	}
 	return none, !hasUnfilledSlot
+}
+
+func (b *Board) calcPointsFor(target player) int {
+	var points int
+	for i, row := range b.b {
+		for j, candidate := range row {
+			if candidate != target {
+				continue
+			}
+
+			for _, delta := range []Pos{{0, 1}, {1, 0}, {1, 1}, {1, -1}} {
+				next := Pos{x: i + delta.x, y: j + delta.y}
+				if !b.IsValidPosition(next) {
+					continue
+				}
+				if b.b[next.x][next.y] == target {
+					points += 1
+				}
+			}
+		}
+	}
+	return points
 }
 
 func (b *Board) IsValidPosition(pos Pos) bool {

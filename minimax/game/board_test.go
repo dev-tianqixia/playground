@@ -49,3 +49,25 @@ func TestBoard_IsTerminated(t *testing.T) {
 	assert.Equal(t, true, terminated)
 	assert.Equal(t, none, winner)
 }
+
+func TestBoard_CalcPointsFor(t *testing.T) {
+	board := NewBoard(3)
+	assert.Equal(t, 0, board.calcPointsFor(O))
+	assert.Equal(t, 0, board.calcPointsFor(X))
+
+	board = &Board{b: [][]player{
+		{1, 2, 0},
+		{0, 1, 1},
+		{2, 0, 2},
+	}}
+	assert.Equal(t, 2, board.calcPointsFor(O))
+	assert.Equal(t, 0, board.calcPointsFor(X))
+
+	board = &Board{b: [][]player{
+		{1, 2, 1},
+		{2, 1, 2},
+		{2, 1, 2},
+	}}
+	assert.Equal(t, 3, board.calcPointsFor(O))
+	assert.Equal(t, 4, board.calcPointsFor(X))
+}
